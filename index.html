@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Feliz Cumpleaños Mi Vida Hermosa ❤️</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: radial-gradient(ellipse at bottom, #1b1938 0%, #090a14 100%);
+            color: #fdf2f8;
+            min-height: 100vh;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-romantic {
+            font-family: var(--font-serif);
+        }
+
+        
+        #sky-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        
+        .glass-card {
+            background: rgba(25, 22, 48, 0.68);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(244, 114, 182, 0.22);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(244, 114, 182, 0.12);
+        }
+
+        .glow-envelope {
+            filter: drop-shadow(0 0 25px rgba(244, 114, 182, 0.55));
+            animation: floatSlow 3.6s ease-in-out infinite;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(1.5deg); }
+        }
+
+        @keyframes pulseHeart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.16); }
+        }
+
+        .pulse-heart {
+            animation: pulseHeart 1.6s infinite ease-in-out;
+        }
+
+        
+        @keyframes flicker {
+            0%, 100% { transform: scaleY(1) scaleX(1) rotate(-1deg); opacity: 0.95; }
+            25% { transform: scaleY(1.08) scaleX(0.94) rotate(2deg); opacity: 1; }
+            50% { transform: scaleY(0.95) scaleX(1.05) rotate(-2deg); opacity: 0.9; }
+            75% { transform: scaleY(1.05) scaleX(0.96) rotate(1deg); opacity: 1; }
+        }
+
+        .candle-flame {
+            transform-origin: bottom center;
+            animation: flicker 1.4s infinite ease-in-out;
+        }
+
+        .flame-out {
+            transform: scale(0) !important;
+            opacity: 0 !important;
+            transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        
+        @keyframes smokeRise {
+            0% { opacity: 0.8; transform: translateY(0) scale(0.8); }
+            100% { opacity: 0; transform: translateY(-35px) scale(1.8); }
+        }
+
+        .smoke-anim {
+            animation: smokeRise 1.5s ease-out forwards;
+        }
+
+        
+        .floating-heart {
+            position: fixed;
+            bottom: -50px;
+            pointer-events: none;
+            z-index: 60;
+            animation: riseUp linear forwards;
+        }
+
+        @keyframes riseUp {
+            0% {
+                transform: translateY(0) scale(0.7) rotate(0deg);
+                opacity: 1;
+            }
+            80% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-110vh) scale(1.3) rotate(25deg);
+                opacity: 0;
+            }
+        }
+
+        
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(20px) scale(0.98);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        
+        .secret-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+            opacity: 0;
+        }
+
+        .secret-content.open {
+            max-height: 240px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col items-center justify-center min-h-screen px-4 py-8 selection:bg-pink-500 selection:text-white">
+
+    
+    <canvas id="sky-canvas"></canvas>
+    <audio id="birthday-music" src="musica.mp3" loop preload="none"></audio>
+
+    
+    <main id="intro-screen" class="relative z-10 w-full max-w-md mx-auto flex flex-col items-center text-center transition-all duration-700">
+        
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-500/15 border border-pink-400/30 text-pink-200 text-xs font-medium mb-6 tracking-wide shadow-inner">
+            <span class="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
+            <span>12:00 AM • Directo hasta tu corazón</span>
+        </div>
+
+        <h1 class="font-romantic text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-rose-300 to-amber-200 mb-4 leading-tight drop-shadow">
+            Para mi vida hermosa, Eli ❤️
+        </h1>
+
+        <p class="text-pink-100/85 text-sm sm:text-base leading-relaxed max-w-xs sm:max-w-sm mb-10 font-normal">
+            Aunque hoy estemos a kilómetros de distancia, quería estar contigo justo a las 12... Toca para abrir tu sorpresa mi cielo.
+        </p>
+
+        
+        <button id="open-envelope-btn" onclick="openBirthdayCard()" aria-label="Abrir carta de cumpleaños" class="group relative flex flex-col items-center justify-center focus:outline-none">
+            
+            <div class="absolute -inset-6 bg-gradient-to-r from-pink-500/30 via-rose-500/30 to-amber-400/30 rounded-full blur-2xl group-hover:opacity-100 opacity-75 transition duration-500"></div>
+            
+            
+            <div class="glow-envelope relative w-44 h-36 sm:w-48 sm:h-40 flex items-center justify-center cursor-pointer active:scale-95 transition-transform">
+                <svg viewBox="0 0 220 170" class="w-full h-full overflow-visible">
+                    <defs>
+                        <linearGradient id="envBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#fda4af" />
+                            <stop offset="50%" stop-color="#f43f5e" />
+                            <stop offset="100%" stop-color="#be123c" />
+                        </linearGradient>
+                        <linearGradient id="envFlap" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#fecdd3" />
+                            <stop offset="100%" stop-color="#fb7185" />
+                        </linearGradient>
+                        <linearGradient id="paperGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#fff1f2" />
+                            <stop offset="100%" stop-color="#ffe4e6" />
+                        </linearGradient>
+                    </defs>
+
+                    
+                    <rect x="10" y="35" width="200" height="125" rx="14" fill="url(#envBody)" stroke="#fecdd3" stroke-width="2" />
+
+                    
+                    <rect x="26" y="18" width="168" height="110" rx="8" fill="url(#paperGrad)" class="transition-transform duration-500 group-hover:-translate-y-3" />
+                    <line x1="48" y1="42" x2="172" y2="42" stroke="#fda4af" stroke-width="3" stroke-linecap="round" />
+                    <line x1="48" y1="58" x2="145" y2="58" stroke="#fda4af" stroke-width="3" stroke-linecap="round" />
+
+                    
+                    <path d="M10 38 L110 105 L210 38 L210 146 C210 154 204 160 196 160 L24 160 C16 160 10 154 10 146 Z" fill="#e11d48" opacity="0.88" />
+                    <path d="M10 156 L110 95 L210 156" fill="#be123c" opacity="0.65" />
+
+                    
+                    <path d="M10 38 L110 105 L210 38 C210 35 205 35 198 35 L22 35 C15 35 10 35 10 38 Z" fill="url(#envFlap)" />
+
+                    
+                    <g class="pulse-heart" style="transform-origin: 110px 102px;">
+                        <circle cx="110" cy="102" r="21" fill="#fff1f2" stroke="#fda4af" stroke-width="2" />
+                        <path d="M110 112 C110 112 96 103 96 95 C96 90 100 87 104 87 C107 87 109 89 110 91 C111 89 113 87 116 87 C120 87 124 90 124 95 C124 103 110 112 110 112 Z" fill="#e11d48" />
+                    </g>
+                </svg>
+            </div>
+
+            <span class="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-pink-500 to-rose-600 text-white font-semibold text-sm shadow-lg shadow-rose-600/40 group-hover:scale-105 active:scale-95 transition">
+                <span>Abrir mi regalo</span>
+                <span>✨</span>
+            </span>
+        </button>
+    </main>
+
+
+    
+    <section id="card-screen" class="hidden relative z-10 w-full max-w-lg mx-auto my-4 fade-enter">
+        
+        <div class="glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+            
+            
+            <div class=" -top-20 -right-20 w-44 h-44 bg-pink-500/20 rounded-full blur-3xl pointer-events-none absolute"></div>
+            <div class=" -bottom-20 -left-20 w-44 h-44 bg-amber-500/15 rounded-full blur-3xl pointer-events-none absolute"></div>
+
+            
+            <div class="text-center mb-6">
+                <div class="inline-block px-3 py-1 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-200 text-xs font-medium mb-3">
+                    Para: Eliana ("Mi Cielo") 🎂
+                </div>
+                <h2 class="font-romantic text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-rose-200 to-amber-200 leading-tight">
+                    ¡Feliz Cumpleaños Mi Cielo! 🎂✨
+                </h2>
+                <div class="w-20 h-0.5 bg-gradient-to-r from-transparent via-pink-400/60 to-transparent mx-auto mt-3"></div>
+            </div>
+
+            <figure id="birthday-photo" class="mb-6">
+                <img src="foto.png" alt="Nuestro recuerdo en Minecraft" class="w-full h-auto rounded-2xl border border-pink-300/30 shadow-lg">
+            </figure>
+
+            <button id="music-toggle" type="button" onclick="toggleBirthdayMusic()" class="hidden w-full mb-6 px-5 py-3 rounded-full bg-pink-500/15 border border-pink-300/30 text-pink-100 text-sm font-medium hover:bg-pink-500/25 transition">Pausar música ♫</button>
+
+            
+            <div class="bg-slate-950/45 border border-pink-300/15 rounded-2xl p-5 sm:p-6 mb-7 shadow-inner">
+                <p class="text-pink-50/95 text-[15px] sm:text-base leading-relaxed tracking-wide font-normal text-left whitespace-pre-line">Mi vida hermosa feliz cumpleaños, queria ser el primero en felicitarte justo a las 12 alla contigo porque sabes lo importante que eres para mi. Te amo muchisimo mi cielo y aunque hoy me encantaria estar ahi en persona para darte un abrazo fuerte, sabes que mi corazon esta contigo celebrando tu vida. Muchas gracias por otro año mas a tu lado, por dejarme entrar en tu mundo y por compartirme todo lo que eres, porque te has convertido en alguien demasiado especial y en una parte esencial de mi vida. Sabes que quiero pasar mi vida a tu lado, que me encanta estar contigo y que siempre voy a estar ahi para ti y para ella tambien, cuidandolas y apoyandote en todo lo que pueda para que cumplas todo lo que desees. Espero que hoy estes disfrutando mucho, que pases un dia hermoso en familia y que la vida te regale todo lo bonito que te mereces. Eres todo para mi mi cielo, de corazon te agradezco por estar conmigo y por tanto. Te amo con todo lo que soy, te amo te amo mas de lo que crees y mas de lo que puedo expresar. Feliz cumpleaños amoor</p>
+                
+                <div class="mt-4 flex items-center justify-end gap-2 text-pink-300 font-romantic italic text-lg">
+                    <span>Siempre tuyo, con todo mi amor</span>
+                    <span>❤️</span>
+                </div>
+            </div>
+
+            
+            <div class="mb-8">
+                <p class="text-xs uppercase tracking-widest text-pink-300/80 text-center font-semibold mb-3">
+                    Toca cada tarjetita mi amor ✨
+                </p>
+
+                <div class="space-y-3">
+                    
+                    <div class="rounded-2xl bg-white/5 border border-pink-300/20 overflow-hidden transition hover:border-pink-400/40">
+                        <button onclick="toggleSecret(1)" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-medium text-sm sm:text-base text-pink-100 focus:outline-none">
+                            <span class="flex items-center gap-2.5">
+                                <span class="text-lg">✨</span>
+                                <span>Lo que eres para mí</span>
+                            </span>
+                            <span id="icon-1" class="text-pink-300 transition-transform duration-300 text-xs">▼</span>
+                        </button>
+                        <div id="secret-1" class="secret-content px-4 bg-pink-950/30">
+                            <p class="py-3.5 text-sm text-pink-100/90 leading-relaxed border-t border-pink-300/15">
+                                Eres mi persona favorita, mi equipo y la mujer increíble y fuerte con la que siempre quiero estar.
+                            </p>
+                        </div>
+                    </div>
+
+                    
+                    <div class="rounded-2xl bg-white/5 border border-pink-300/20 overflow-hidden transition hover:border-pink-400/40">
+                        <button onclick="toggleSecret(2)" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-medium text-sm sm:text-base text-pink-100 focus:outline-none">
+                            <span class="flex items-center gap-2.5">
+                                <span class="text-lg">🤍</span>
+                                <span>Mi promesa para ti</span>
+                            </span>
+                            <span id="icon-2" class="text-pink-300 transition-transform duration-300 text-xs">▼</span>
+                        </button>
+                        <div id="secret-2" class="secret-content px-4 bg-pink-950/30">
+                            <p class="py-3.5 text-sm text-pink-100/90 leading-relaxed border-t border-pink-300/15">
+                                Estar siempre a tu lado y para ustedes, apoyándote en cada paso, cada sueño y cada locura.
+                            </p>
+                        </div>
+                    </div>
+
+                    
+                    <div class="rounded-2xl bg-white/5 border border-pink-300/20 overflow-hidden transition hover:border-pink-400/40">
+                        <button onclick="toggleSecret(3, true)" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-medium text-sm sm:text-base text-pink-100 focus:outline-none">
+                            <span class="flex items-center gap-2.5">
+                                <span class="text-lg">🫂</span>
+                                <span>Un abrazo a la distancia</span>
+                            </span>
+                            <span id="icon-3" class="text-pink-300 transition-transform duration-300 text-xs">▼</span>
+                        </button>
+                        <div id="secret-3" class="secret-content px-4 bg-pink-950/30">
+                            <p class="py-3.5 text-sm text-pink-100/90 leading-relaxed border-t border-pink-300/15">
+                                Cierra los ojos 3 segundos... te mando el abrazo más fuerte del mundo hasta allá. Te amo demasiado mi amor. ❤️
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="rounded-2xl bg-gradient-to-b from-pink-950/40 to-slate-950/60 border border-amber-300/25 p-5 text-center relative">
+                <h3 class="font-romantic text-2xl font-bold text-amber-200 mb-1">
+                    Pide tu deseo de cumpleaños 🕯️
+                </h3>
+                <p id="candle-instruction" class="text-xs sm:text-sm text-pink-100/80 mb-4">
+                    Cierra los ojos, pide tu deseo y toca la velita (o el botón) para soplarla juntos:
+                </p>
+
+                
+                <div onclick="blowCandle()" class="relative w-36 h-36 mx-auto my-2 flex items-center justify-center cursor-pointer select-none group">
+                    
+                    <div id="candle-glow" class="absolute top-2 w-20 h-20 rounded-full bg-amber-400/35 blur-xl transition-opacity duration-500"></div>
+
+                    <svg viewBox="0 0 160 160" class="w-full h-full overflow-visible">
+                        
+                        <ellipse cx="80" cy="140" rx="64" ry="10" fill="#cbd5e1" opacity="0.8" />
+                        <ellipse cx="80" cy="138" rx="56" ry="7" fill="#f8fafc" />
+
+                        
+                        <rect x="34" y="92" width="92" height="45" rx="10" fill="#f472b6" />
+                        <rect x="34" y="112" width="92" height="8" fill="#fb7185" opacity="0.6" />
+
+                        
+                        <path d="M32 94 C32 86 40 84 48 84 L112 84 C120 84 128 86 128 94 C128 101 121 104 116 99 C111 94 106 105 100 105 C94 105 89 95 82 101 C75 107 69 95 62 102 C55 108 49 95 43 101 C37 106 32 101 32 94 Z" fill="#fff1f2" />
+
+                        
+                        <circle cx="55" cy="92" r="2" fill="#fbbf24" />
+                        <circle cx="75" cy="95" r="2" fill="#38bdf8" />
+                        <circle cx="95" cy="91" r="2" fill="#a855f7" />
+                        <circle cx="110" cy="94" r="2" fill="#f43f5e" />
+
+                        
+                        <rect x="74" y="48" width="12" height="38" rx="4" fill="#fef3c7" stroke="#fde68a" stroke-width="1.5" />
+                        <line x1="74" y1="58" x2="86" y2="63" stroke="#fb7185" stroke-width="2.5" />
+                        <line x1="74" y1="70" x2="86" y2="75" stroke="#fb7185" stroke-width="2.5" />
+
+                        
+                        <line x1="80" y1="43" x2="80" y2="48" stroke="#475569" stroke-width="2" stroke-linecap="round" />
+
+                        
+                        <g id="flame-group" class="candle-flame">
+                            <path d="M80 18 C80 18 91 30 88 39 C86 44 83 45 80 45 C77 45 74 44 72 39 C69 30 80 18 80 18 Z" fill="#f59e0b" />
+                            <path d="M80 25 C80 25 86 33 84 39 C83 42 81 43 80 43 C79 43 77 42 76 39 C74 33 80 25 80 25 Z" fill="#fef08a" />
+                        </g>
+
+                        
+                        <g id="smoke-group" class="hidden">
+                            <circle cx="78" cy="36" r="4" fill="#cbd5e1" opacity="0.6" />
+                            <circle cx="83" cy="28" r="6" fill="#cbd5e1" opacity="0.4" />
+                            <circle cx="77" cy="18" r="8" fill="#cbd5e1" opacity="0.2" />
+                        </g>
+                    </svg>
+                </div>
+
+                
+                <button id="wish-btn" onclick="blowCandle()" class="mt-2 w-full sm:w-auto px-6 py-3 rounded-full bg-gradient-to-r from-amber-400 via-rose-500 to-pink-600 text-white font-semibold text-sm shadow-lg shadow-rose-500/30 hover:brightness-110 active:scale-95 transition">
+                    Pedir mi deseo y soplar la velita 🕯️✨
+                </button>
+
+                
+                <div id="wish-message" class="hidden mt-4 p-4 rounded-xl bg-pink-500/20 border border-pink-300/40 text-pink-100 font-medium text-sm sm:text-base animate-pulse">
+                    ¡Que todo lo que desees se cumpla mi vida hermosa! Te amo infinito ❤️
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        
+        const canvas = document.getElementById('sky-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initStars();
+        }
+
+        function initStars() {
+            stars = [];
+            const count = Math.min(130, Math.floor((canvas.width * canvas.height) / 9000));
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.7 + 0.4,
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.015 + 0.004,
+                    color: Math.random() > 0.8 ? '#fbcfe8' : (Math.random() > 0.6 ? '#fde68a' : '#ffffff')
+                });
+            }
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let s of stars) {
+                s.alpha += s.speed;
+                if (s.alpha > 1 || s.alpha < 0.15) {
+                    s.speed = -s.speed;
+                }
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                ctx.fillStyle = s.color;
+                ctx.globalAlpha = Math.max(0.1, Math.min(1, s.alpha));
+                ctx.fill();
+            }
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animateStars);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.onload = function() {
+            resizeCanvas();
+            animateStars();
+        };
+
+        
+        function openBirthdayCard() {
+            const music = document.getElementById('birthday-music');
+            music.play().then(() => {
+                document.getElementById('music-toggle').classList.remove('hidden');
+            }).catch(() => {
+                document.getElementById('music-toggle').textContent = 'Reproducir música ♫';
+                document.getElementById('music-toggle').classList.remove('hidden');
+            });
+            launchRomanticConfetti();
+
+            const intro = document.getElementById('intro-screen');
+            const card = document.getElementById('card-screen');
+
+            intro.style.opacity = '0';
+            intro.style.transform = 'scale(0.92) translateY(-15px)';
+
+            setTimeout(() => {
+                intro.classList.add('hidden');
+                card.classList.remove('hidden');
+                void card.offsetWidth;
+                card.classList.add('fade-enter-active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 550);
+        }
+
+        function toggleBirthdayMusic() {
+            const music = document.getElementById('birthday-music');
+            const button = document.getElementById('music-toggle');
+            if (music.paused) {
+                music.play().then(() => button.textContent = 'Pausar música ♫').catch(() => {});
+            } else {
+                music.pause();
+                button.textContent = 'Reproducir música ♫';
+            }
+        }
+
+        function launchRomanticConfetti() {
+            if (typeof confetti !== 'function') return;
+            const colors = ['#f43f5e', '#fb7185', '#fda4af', '#fbbf24', '#ffffff'];
+            
+            confetti({
+                particleCount: 80,
+                spread: 75,
+                origin: { y: 0.6 },
+                colors: colors
+            });
+
+            setTimeout(() => {
+                confetti({
+                    particleCount: 50,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 50,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+            }, 300);
+        }
+
+        
+        function toggleSecret(id, triggerHearts = false) {
+            const content = document.getElementById(`secret-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            const isOpen = content.classList.contains('open');
+
+            if (isOpen) {
+                content.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+                if (triggerHearts) {
+                    spawnFloatingHearts(22);
+                }
+            }
+        }
+
+        function spawnFloatingHearts(amount = 18) {
+            const emojis = ['❤️', '💖', '🫂', '✨', '💕', '🥰'];
+            for (let i = 0; i < amount; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'floating-heart';
+                    heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                    heart.style.left = Math.random() * 92 + 4 + 'vw';
+                    heart.style.fontSize = (Math.random() * 18 + 18) + 'px';
+                    heart.style.animationDuration = (Math.random() * 2.2 + 2.8) + 's';
+                    document.body.appendChild(heart);
+
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 5200);
+                }, i * 110);
+            }
+        }
+
+        
+        let candleBlown = false;
+
+        function blowCandle() {
+            const flame = document.getElementById('flame-group');
+            const glow = document.getElementById('candle-glow');
+            const smoke = document.getElementById('smoke-group');
+            const wishMsg = document.getElementById('wish-message');
+            const wishBtn = document.getElementById('wish-btn');
+            const instruction = document.getElementById('candle-instruction');
+
+            if (!candleBlown) {
+                candleBlown = true;
+                flame.classList.add('flame-out');
+                glow.style.opacity = '0';
+
+                smoke.classList.remove('hidden');
+                smoke.classList.add('smoke-anim');
+
+                wishMsg.classList.remove('hidden');
+                instruction.innerText = '¡Deseo enviado al universo mi cielo! ✨';
+                wishBtn.innerText = 'Volver a encender la velita 🔥';
+
+                launchRomanticConfetti();
+                spawnFloatingHearts(26);
+            } else {
+                candleBlown = false;
+                flame.classList.remove('flame-out');
+                glow.style.opacity = '1';
+                smoke.classList.add('hidden');
+                smoke.classList.remove('smoke-anim');
+                wishBtn.innerText = 'Pedir otro deseo y soplar 🕯️✨';
+            }
+        }
+    </script>
+</body>
+</html>
